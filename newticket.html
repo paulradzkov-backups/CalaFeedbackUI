@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Acessar</title>
+        <link href="favicon.ico" rel="shortcut icon" type="image/x-icon">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/base.css" type="text/css">
+        <link rel="stylesheet" href="css/site.css">
+        <link rel="stylesheet" href="css/themes/ui-lightness/jquery-ui.custom.css" type="text/css">
+        <script src="scripts/modernizr-2.5.3.js"></script>
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/jquery-migrate.js"></script>
+        <script src="scripts/jquery-ui.js"></script>
+        <script src="scripts/jquery.unobtrusive-ajax.js"></script>
+        <script src="scripts/jquery.validate.js"></script>
+        <script src="scripts/jquery.validate.unobtrusive.js"></script>
+        <script src="scripts/jquery.blockUI.js"></script>
+        <script src="scripts/jquery.jqGrid.src.js"></script>
+        <script src="scripts/jquery.unobtrusive-ajax.js"></script>
+        <script src="scripts/jquery.validate.js"></script>
+        <script src="scripts/jquery.validate.unobtrusive.js"></script>
+        <script src="scripts/grid.locale-en.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="body" class="page-body">
+            <section class="content-wrapper main-content clearfix">
+                
+
+                <div class="theme-canvas view-ticket-create">
+                    <header class="page-header">
+                        <p class="logo"><span class="idt-logo">IDT</span> <span class="logo-region">Brazil</span></p>
+                        <div class="page-header-logout"> 
+                            <a href="index.html" id="loginLink">Sair</a>
+                        </div>
+                    </header>
+                    <div class="theme-canvas-inner">
+                        <h1 class="page-title">Geração de Ticket</h1>
+                        <form action="tickets.html" method="post" novalidate="novalidate">
+                            <div id="MESSAGE_TOP" class="message-container"> 
+
+                            </div>
+                            <fieldset>
+                                <legend class="visuallyhidden">Geração de Ticket</legend>
+                                <div class="columns clearfix">
+                                    <div class="column primary-col">
+                                        <div class="form-row form-vertical">
+                                            <div class="form-label"><label for="TicketDesc">Descrição</label></div>
+                                            <div class="form-field">
+                                                <textarea class="text-box multi-line" data-val="true" data-val-required="The Descrição field is required." id="TicketDesc" name="TicketDesc"></textarea>
+                                                <span class="field-validation-valid" data-valmsg-for="TicketDesc" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column secondary-col form-horizontal">
+                                        <div class="form-row">
+                                            <div class="form-label"><label for="ContactName">Nome de Contato</label></div>
+                                            <div class="form-field">
+                                                <input class="text-box single-line" data-val="true" data-val-required="The Nome de Contato field is required." id="ContactName" name="ContactName" type="text" value="">
+                                                <span class="field-validation-valid" data-valmsg-for="ContactName" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-label"><label for="ContactPhone">Telefone de Contato</label></div>
+                                            <div class="form-field">
+                                                <input class="text-box single-line" data-val="true" data-val-required="The Telefone de Contato field is required." id="ContactPhone" name="ContactPhone" type="text" value="">
+                                                <span class="field-validation-valid" data-valmsg-for="ContactPhone" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-label"><label for="ContactEmail">Email de Contato</label></div>
+                                            <div class="form-field">
+                                                <input class="text-box single-line" id="ContactEmail" name="ContactEmail" type="text" value="">
+                                                <span class="field-validation-valid" data-valmsg-for="ContactEmail" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-label"><label for="CustomerTicket">Ticket do Cliente</label></div>
+                                            <div class="form-field">
+                                                <input class="text-box single-line" id="CustomerTicket" name="CustomerTicket" type="text" value="">
+                                                <span class="field-validation-valid" data-valmsg-for="CustomerTicket" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-label"><label for="CustomerCode">Numero Cadastrado com IDT</label></div>
+                                            <div class="form-field">
+                                                <input class="text-box single-line" data-val="true" data-val-length="Ani cannot be longer than 15 characters." data-val-length-max="15" id="CustomerCode" name="CustomerCode" type="text" value="">
+                                                <span class="field-validation-valid" data-valmsg-for="CustomerCode" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-label"><label for="ServiceType">Tipo de Serviço</label></div>
+                                            <div class="form-field">
+                                                <select data-val="true" data-val-required="The Tipo de Serviço field is required." id="ServiceType" name="ServiceType">
+                                                    <option value="" selected disabled>-- Select --</option>
+                                                    <option value="CPS">CPS</option>
+                                                    <option value="800">800</option>
+                                                    <option value="Enterprise">Enterprise</option>
+                                                    <option value="VOIP">VOIP</option>
+                                                    <option value="IDT Connect">IDT Connect</option>
+                                                    <option value="IDTTEL">IDTTEL</option>
+                                                </select>
+                                                <span class="field-validation-valid" data-valmsg-for="ServiceType" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-label"><label for="TypeOfIssue">Tipo de Reclamação</label></div>
+                                            <div class="form-field">
+                                                <select data-val="true" data-val-required="The Tipo de Reclamação field is required." id="TypeOfIssue" name="TypeOfIssue">
+                                                    <option value="" selected disabled>-- Select --</option>
+                                                    <option value="Completamento de chamadas/ Call Completion Issue">Completamento de chamadas/ Call Completion Issue</option>
+                                                    <option value="Eco/ Echo">Eco/ Echo</option>
+                                                    <option value="DTMF/ DTMF">DTMF/ DTMF</option>
+                                                    <option value="Fax/ Fax">Fax/ Fax</option>
+                                                    <option value="Ruido/ Static">Ruido/ Static</option>
+                                                    <option value="Picote/ Choppiness">Picote/ Choppiness</option>
+                                                    <option value="Atraso Na Voz/ Delay">Atraso Na Voz/ Delay</option>
+                                                    <option value="Voz Metalizada/ Metalic Voice">Voz Metalizada/ Metalic Voice</option>
+                                                    <option value="Outro/ Other">Outro/ Other</option>
+                                                    <option value="Acesso/Access">Acesso/Access</option>
+                                                </select>
+                                                <span class="field-validation-valid" data-valmsg-for="TypeOfIssue" data-valmsg-replace="true"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p class="form-action centered">
+                                    <input type="submit" value="Gerar" class="create-ticket">
+                                </p>
+                            </fieldset>
+                        </form>
+                        <p class="back-link centered"><a href="tickets.html">Voltar para a Lista</a></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <footer class="page-footer">
+            <div class="content-wrapper">
+                <p>&copy; 2014 - IDT</p>
+            </div>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Acessar</title>
+        <link href="favicon.ico" rel="shortcut icon" type="image/x-icon">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/base.css" type="text/css">
+        <link rel="stylesheet" href="css/site.css">
+        <link rel="stylesheet" href="css/themes/ui-lightness/jquery-ui.custom.css" type="text/css">
+        <link rel="stylesheet" href="css/ui.jqgrid.css" type="text/css">
+        <script src="scripts/modernizr-2.5.3.js"></script>
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/jquery-migrate.js"></script>
+        <script src="scripts/jquery-ui.js"></script>
+        <script src="scripts/jquery.unobtrusive-ajax.js"></script>
+        <script src="scripts/jquery.validate.js"></script>
+        <script src="scripts/jquery.validate.unobtrusive.js"></script>
+        <script src="scripts/jquery.blockUI.js"></script>
+        <script src="scripts/jquery.jqGrid.src.js"></script>
+        <script src="scripts/jquery.unobtrusive-ajax.js"></script>
+        <script src="scripts/jquery.validate.js"></script>
+        <script src="scripts/jquery.validate.unobtrusive.js"></script>
+        <script src="scripts/grid.locale-en.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="body" class="page-body">
+            <section class="content-wrapper main-content clearfix">
+                <div class="theme-canvas view-tickets-index">
+                    <header class="page-header">
+                        <p class="logo"><span class="idt-logo">IDT</span> <span class="logo-region">Brazil</span></p>
+                        <div class="page-header-logout">
+                        <a href="index.html" id="loginLink">Sair</a>
+                        </div>
+                    </header>
+                    <div class="theme-canvas-inner">
+
+
+
+                    <script type="text/javascript"> 
+                        var GridLoadedFlag = false;
+                        var gTicketId;
+
+                        show_grid_and_search_tickets = function () {
+                            $.blockUI({ message: "<h1 class='processing'>PROCESSAMENTO... </h1>"}); 
+                            transGrid = jQuery("#trans_grid").jqGrid({
+                                datatype: 'json',
+                                height: 'auto',
+                                shrinkToFit: false, 
+                                url: "data.js",
+                                postData: {
+                                    fromdate: jQuery("#DT_FROM_FOR_SEARCH").val(),
+                                    todate: jQuery("#DT_TO_FOR_SEARCH").val()                                
+                                },
+                                mtype: 'POST',
+                                autowidth: true,
+                                rowNum: 18,
+                                emptyrecords: "Nada para mostrar",
+                                pager: '#trans_grid_pager',
+                                viewrecords: true,
+                                loadonce: true,
+                                recordtext: "View {0} - {1} of {2}",
+                                colNames: [  
+                                  'Numero de Ticket',
+                                  'Estado',
+                                  'Tipo de Serviço',
+                                  'Tipo de Reclamação',
+                                  'Numero Cadastrado com IDT', 
+                                  'Data de Criação'                    
+                                ],
+                          
+                                colModel: [
+                                //"Open","2272388","IDT Brazil Technical Issue",,"""2013-11-14T13:05:00-05:00","345345345","800","DTMF/ DTMF"
+                                   { name: 'id',     index: 'id',     width: 99, sorttype: 'number' },
+                                   { name: 'cell.0', index: 'cell.0', width: 119 },
+                                   { name: 'cell.6', index: 'cell.6', width: 119 },
+                                   { name: 'cell.7', index: 'cell.7', width: 179 },
+                                   { name: 'cell.5', index: 'cell.5', width: 119 },
+                                   { name: 'cell.4', index: 'cell.4', width: 119, formatter: 'date', formatoptions: { newformat: 'm/d/Y'}  }
+                                ],
+                                gridComplete: function () {
+                                    var rows = jQuery("#trans_grid").jqGrid('getGridParam', 'selrow');
+                                    var ids = jQuery("#trans_grid").jqGrid('getDataIDs');
+                                    var gr = jQuery('#trans_grid');
+                                    //gr.setGridHeight(400, true);
+                                    for (var i = 0; i < ids.length; i++) {
+                                        var cl = ids[i];
+                                        
+                                        
+                                        //var statusValue = jQuery("#trans_grid").jqGrid('getRowData', ids[i]).cell.0;
+                                        var statusValue = jQuery('#trans_grid').jqGrid('getCell',ids[i],'cell.0');
+                                        //  jQuery("#trans_grid").jqGrid('setRowData',0,dataToAdd[0]);
+                                        //  if (statusValue == "Pending")
+                                        //     jQuery("#trans_grid").jqGrid('setRowData', rowId, { 'cell.0': "OPENNN Pending" });                    
+                                        // jQuery("#trans_grid").jqGrid('setRowData', rowId, { 1: "OPENNN Pending" });                    
+                                      
+                                        //alert(statusValue);
+
+                                        var statusValue = jQuery('#trans_grid').jqGrid('getCell',ids[i],'cell.0');
+                                        var TranslatedStatusValue = "";
+                                        if (statusValue == "Pending")
+                                            TranslatedStatusValue = "Pendente"
+                                        else if (statusValue == "Open")
+                                            TranslatedStatusValue = "Aberto"
+                                        else if (statusValue == "Closed")
+                                            TranslatedStatusValue = "Fechado"
+
+                                        jQuery('#trans_grid').jqGrid('setCell', ids[i], 'cell.0', TranslatedStatusValue);
+
+                                        // now change the internal local data
+                                        // trans_grid.jqGrid('getLocalRow', rowid).myColumn = TranslatedStatusValue;
+                                    }
+                                },
+                                jsonReader: {
+                                    root: 'rows',
+                                    repeatitems: false
+                                }  , 
+                                loadComplete  :  function(data) 
+                                {  
+                                    GridLoadedFlag = true;
+                                    $.unblockUI();
+                                 },
+                                 onSelectRow: function(ids) { 
+                                    //show_ticket(ids);
+                                    open_ticket(ids);
+                                    }
+                            });
+                        }  
+
+                        function search_tickets() { 
+                            $.blockUI({ message: "<h1 class='processing'>PROCESSAMENTO...</h1>"}); 
+                            var trans_grid = jQuery('#trans_grid');
+                            trans_grid.setGridParam({ 
+                                url: "data.js",
+                                postData: {
+                                    fromdate: jQuery("#DT_FROM_FOR_SEARCH").val(),
+                                    todate: jQuery("#DT_TO_FOR_SEARCH").val()                                
+                                }
+                            });
+                            trans_grid.setGridParam({ datatype: 'json' });
+                            trans_grid.trigger("reloadGrid");
+                        }
+
+                        determine_search_action = function () {
+                            var TicketId = jQuery("#TICKET_ID_FOR_SEARCH").val().trim();
+                            
+                            if (TicketId.length > 0)
+                            {
+                                show_ticket(TicketId);
+                            }
+                            else if (!GridLoadedFlag) 
+                            {
+                                show_grid_and_search_tickets()
+                            }
+                            else
+                                search_tickets();
+                        }
+
+                        jQuery(document).ready(function () {
+                     
+                            jQuery("#DT_FROM_FOR_SEARCH").datepicker({
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: 'mm/dd/yy',
+                                gotoCurrent: true
+                            });
+                            jQuery("#DT_FROM_FOR_SEARCH").attr('maxlength', '10');
+                            jQuery("#DT_FROM_FOR_SEARCH").val("@ViewBag.CurrentDateStr");
+
+                            jQuery("#DT_TO_FOR_SEARCH").datepicker({
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: 'mm/dd/yy',
+                                gotoCurrent: true
+                            });
+                            jQuery("#DT_TO_FOR_SEARCH").attr('maxlength', '10');
+                            jQuery("#DT_TO_FOR_SEARCH").val("@ViewBag.CurrentDateStr");
+                              
+                           //showTable(); 
+                           ini_ticket_dialog();
+                        }); 
+
+                        function ini_ticket_dialog() {
+                            var dialogOptsRuleLists = {
+                                title: "Ticket",
+                                modal: true,
+                                autoOpen: false,
+                                height: 600,
+                                width: 810,
+                                buttons: { 'Perto': function () {
+                                    jQuery(this).dialog("close");
+                                    jQuery("#ifrShowTicket").attr('src', "");
+                                }
+                                },
+                                open: function () {            
+                                    jQuery("#ifrShowTicket").attr('src', "viewticket.html");
+                                }
+                            };
+
+                            jQuery("#dvShowTicket").dialog(dialogOptsRuleLists);    //end dialog
+                        } 
+
+                        //opens ticket in popup
+                        function show_ticket(ticketId) {
+                            gTicketId = ticketId;
+                            jQuery("#dvShowTicket").dialog("open");
+                        }
+
+                        //opens ticket in new tab
+                        function open_ticket(ticketId) {
+                            gTicketId = ticketId;
+                            window.open("viewticket.html");
+                        }
+                    </script>
+
+                    <form action="tickets.html" method="post" novalidate="novalidate">
+                        <div id="MESSAGE_TOP" class="message-container"></div>
+                        <div class="form-row fullwidth bottom-sep"><a class="button" href="newticket.html">Novo Ticket</a></div>
+                        <div class="form-row fullwidth inline-form bottom-sep">
+                            <div class="inline-block seach-by-ticket">
+                                <label for="Numero_de_Ticket:">Numero de Ticket:</label>
+                                <input id="TICKET_ID_FOR_SEARCH" name="TICKET_ID_FOR_SEARCH" style="width: 160px;" type="text" value="">
+                            </div>
+                            <div class="inline-block seach-button">
+                                <input type="button" class="secondary button" value="Pesquisa" onclick="javascript:determine_search_action()">
+                            </div>
+                        </div>    
+                    </form>
+                    <div class="form-row fullwidth nopadding" id="GridNoResults" style="text-align: center; color: red; font-weight: bold; display: none;">
+                        No Tickets were created yet!
+                    </div>
+
+                    <div class="form-row fullwidth nopadding">
+                        <table id="trans_grid" class="grid">
+                        </table>
+                    </div>
+                    <div id="trans_grid_pager">
+                    </div>
+                </div>
+            </section>
+        </div>
+        <footer class="page-footer">
+            <div class="content-wrapper">
+                <p>&copy; 2014 - IDT</p>
+            </div>
+        </footer>
+    </body>
+</html>
