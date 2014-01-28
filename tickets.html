@@ -48,18 +48,15 @@
                                 height: 'auto',
                                 shrinkToFit: false, 
                                 url: "data.js",
-                                postData: {
-                                    fromdate: jQuery("#DT_FROM_FOR_SEARCH").val(),
-                                    todate: jQuery("#DT_TO_FOR_SEARCH").val()                                
-                                },
                                 mtype: 'POST',
                                 autowidth: true,
-                                rowNum: 18,
+                                rowNum: 15,
                                 emptyrecords: "Nada para mostrar",
                                 pager: '#trans_grid_pager',
                                 viewrecords: true,
                                 loadonce: true,
                                 recordtext: "View {0} - {1} of {2}",
+                                emptyrecords: "No records to view",
                                 colNames: [  
                                   'Numero de Ticket',
                                   'Estado',
@@ -82,19 +79,11 @@
                                     var rows = jQuery("#trans_grid").jqGrid('getGridParam', 'selrow');
                                     var ids = jQuery("#trans_grid").jqGrid('getDataIDs');
                                     var gr = jQuery('#trans_grid');
-                                    //gr.setGridHeight(400, true);
+                                    
                                     for (var i = 0; i < ids.length; i++) {
                                         var cl = ids[i];
-                                        
-                                        
-                                        //var statusValue = jQuery("#trans_grid").jqGrid('getRowData', ids[i]).cell.0;
+
                                         var statusValue = jQuery('#trans_grid').jqGrid('getCell',ids[i],'cell.0');
-                                        //  jQuery("#trans_grid").jqGrid('setRowData',0,dataToAdd[0]);
-                                        //  if (statusValue == "Pending")
-                                        //     jQuery("#trans_grid").jqGrid('setRowData', rowId, { 'cell.0': "OPENNN Pending" });                    
-                                        // jQuery("#trans_grid").jqGrid('setRowData', rowId, { 1: "OPENNN Pending" });                    
-                                      
-                                        //alert(statusValue);
 
                                         var statusValue = jQuery('#trans_grid').jqGrid('getCell',ids[i],'cell.0');
                                         var TranslatedStatusValue = "";
@@ -117,8 +106,15 @@
                                 }  , 
                                 loadComplete  :  function(data) 
                                 {  
+                                    var ids = jQuery("#trans_grid").jqGrid('getDataIDs');
                                     GridLoadedFlag = true;
                                     $.unblockUI();
+
+                                    if (ids.length == 0)
+                                    { 
+                                        jQuery("#GridWrapper").hide();     
+                                        jQuery("#GridNoResults").show();      
+                                    }
                                  },
                                  onSelectRow: function(ids) { 
                                     //show_ticket(ids);
@@ -157,7 +153,6 @@
                         }
 
                         jQuery(document).ready(function () {
-                     
                             jQuery("#DT_FROM_FOR_SEARCH").datepicker({
                                 changeMonth: true,
                                 changeYear: true,
@@ -165,7 +160,7 @@
                                 gotoCurrent: true
                             });
                             jQuery("#DT_FROM_FOR_SEARCH").attr('maxlength', '10');
-                            jQuery("#DT_FROM_FOR_SEARCH").val("@ViewBag.CurrentDateStr");
+                            //jQuery("#DT_FROM_FOR_SEARCH").val("");
 
                             jQuery("#DT_TO_FOR_SEARCH").datepicker({
                                 changeMonth: true,
@@ -174,10 +169,11 @@
                                 gotoCurrent: true
                             });
                             jQuery("#DT_TO_FOR_SEARCH").attr('maxlength', '10');
-                            jQuery("#DT_TO_FOR_SEARCH").val("@ViewBag.CurrentDateStr");
-                              
+                            //jQuery("#DT_TO_FOR_SEARCH").val("");
+
                            //showTable(); 
                            ini_ticket_dialog();
+                           show_grid_and_search_tickets();
                         }); 
 
                         function ini_ticket_dialog() {
@@ -218,8 +214,13 @@
                         <div class="form-row fullwidth bottom-sep"><a class="button" href="newticket.html">Novo Ticket</a></div>
                         <div class="form-row fullwidth inline-form bottom-sep">
                             <div class="inline-block seach-by-ticket">
-                                <label for="Numero_de_Ticket:">Numero de Ticket:</label>
+                                <label for="TICKET_ID_FOR_SEARCH">Numero de Ticket:</label>
                                 <input id="TICKET_ID_FOR_SEARCH" name="TICKET_ID_FOR_SEARCH" style="width: 160px;" type="text" value="">
+                            </div>
+                            <div class="inline-block seach-by-date">
+                                <label for="DT_FROM_FOR_SEARCH">Datas desde/até:</label>
+                                <input type="text" style = "width: 140px;" class="hasDatepicker" name="DT_FROM_FOR_SEARCH" id="DT_FROM_FOR_SEARCH">
+                                <input type="text" style = "width: 140px;" class="hasDatepicker" name="DT_TO_FOR_SEARCH" id="DT_TO_FOR_SEARCH">
                             </div>
                             <div class="inline-block seach-button">
                                 <input type="button" class="secondary button" value="Pesquisa" onclick="javascript:determine_search_action()">
